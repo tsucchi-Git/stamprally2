@@ -65,7 +65,7 @@
 			          shadowAnchor: [2, 22],
 		          });
           //災害伝承碑基礎データの読み込みの関数をコール
-            getMarkerData(markerList);
+          getMarkerData();
           //ローカルストレージに災害碑の基礎データを保存
           if(window.localStorage){
             //配列markerListをJSONデータに変換し、json_stringという変数に一括代入し、 ローカルストレージに書き込み　キーは「all_basic_data」
@@ -167,7 +167,7 @@
               mymap.fitBounds(bounds);
           }
           //災害伝承碑基礎データの読み込みの関数
-          function getMarkerData(markerList) {
+          function getMarkerData() {
             //urlからデータを読み込む
               fetch('json/marker_3.json')
             //データを受け取って、加工・成形
