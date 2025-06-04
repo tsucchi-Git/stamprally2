@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <link rel='stylesheet' href='css/menu.css'/>
+  <style type="text/css">
+    #mapid_site { height: 330px; width: 100%;margin-top:10px}  /* マップのウィンドウサイズを指定 */
+    #markerImage {height:200px; width: 100%}  
+  </style>
+  <title>checkin</title>
+</head>
+<style>
+    .page-title{
+      margin-top:7%;
+      text-align: center; /* 横方向の中央揃え */
+      font-size: 120%;
+    }
+    table{
+    width:100%;
+    table-layout:fixed;
+    margin-top:10px;
+    border:0px;
+    }
+    .spot-title{
+      text-align: center; /* 横方向の中央揃え */
+      vertical-align: middle; /* 縦方向の中央揃え */
+      font-size: 65%;
+      white-space:nowrap;
+    }
+    .spot-address{
+      text-align: left; /* 横方向の左揃え */
+      vertical-align: middle; /* 縦方向の中央揃え */
+      font-size: 65%;
+      white-space:nowrap;
+    }
+    .text_button{
+      text-align: center; /* 横方向の中央揃え */
+    }
+</style>
+<body>
+  <nav>
+    <ul>
+    <li class=”current”><a href='index.html'>ホーム</a></li>
+    <li><a href='stampnote.html'>スタンプ帳</a></li>
+    <li><a href='howtoplay.html'>遊び方</a></li>
+    <!-- <li><a href=”#”>Blog</a></li> -->
+    </ul>
+   </nav>
+   <div class="page-title">
+    チェックイン
+  </div>
+  <table border="1" >
+    <tbody>
+      <tr>
+        <td><img id="image1" width="100%" class="table-img"></td>
+        <td><img id="image2" width="100%" class="table-img"></td>
+        <td><img id="image3" width="100%" class="table-img"></td>
+      </tr>
+      <tr>
+        <td id="title1" width="100%" class="spot-title"></td>
+        <td id="title2" width="100%" class="spot-title"></td>
+        <td id="title3" width="100%" class="spot-title"></td>
+      </tr>      
+      <tr>
+        <td id="address" colspan="3" class="spot-address"></td>
+      </tr>
+    </tbody>
+  </table>
+  <!- 地図用idの作成 -->
+  <div id="mapid_site" ></div> 
+  <div id="markerDistance" class="text_button"></div> 
+<script>
+    var Curlat;  //現在地の緯度
+    var Curlng;  //現在地の経度
+    var watch_id; //現在地の常時監視機能のid
+    var checkin_distance;  //スポットのチェックイン可能距離[m]
+    var flag_checkin; //-1:対象のスポットは未チェックイン、+1：対象のスポットはチェックイン済
+    var mymap = L.map('mapid_site'); //地図のオブジェクトを生成
+    //このページのURLに付加されたパラメータの値を取得    
+    var params = (new URL(document.location)).searchParams;
+    var latitude=params.get('lat');
+    var longitude=params.get('lng');
+    var curlatitude=params.get('clat');
+    var curlongitude=params.get('clng');
+    var curpoint = [curlatitude, curlongitude]; 
+    var nspot; //同時にチェックインできるスポットの数（同じ緯度・経度に複数のスポットがある場合）   
+    var spot_array; //チェックインできるスポットの地域内整理番号（最大３スポット）
+    var array; //index.htmlで読み込まれたJSONデータ（ウェブストレージ）
+    var visit_yn; //各スポットを訪問したか否かを表す配列
+    var lat_min;
+    var lat_max;
+    var lng_min;
+    var lng_max;
+    //新しいアイコンの定義
+        //緑の葉
+    var greenIcon = L.icon({
+        iconUrl: 'icon/leaf-green.png',
+        shadowUrl: 'icon/leaf-shadow.png',
+        iconSize:     [25, 60], // size of the icon [38, 95]
+        shadowSize:   [30, 40], // size of the shadow [50, 64]
+        iconAnchor:   [14, 59], // point of the icon which will correspond to marker's 
+        //location [22, 94]
+        shadowAnchor: [2, 38],  // the same for the shadow [4, 62]
+        popupAnchor:  [-3, -65] // point from which the popup should open relative to the iconAnchor [-3, -76]
+    });
+    //現在地を表すアイコン
+    var curIcon = L.icon({	
+        iconUrl: 'icon/curposi.png',
+        shadowUrl: 'icon/curposi-shadow.png',
+            //iconRetinaUrl: 'icon/hiking.png',
+            iconSize:   [30, 30], 
+            shadowSize:   [20, 20],
+            iconAnchor: [15, 30],
+            shadowAnchor: [2, 22],
+          });
+    //現在地と対象地との距離を常時計測し表示する
+     var curMarker;   
+    // alert(curlatitude + ',' + curlongitude);
+    // alert(latitude + ',' + longitude);
+      if(window.localStorage){
+          //ローカルストレージからキー「all_basic_data」で基礎データを読み込み配列arrayに格納
+          let json=localStorage.getItem('all_basic_data');
+          array=JSON.parse(json);
+          //ローカルストレージからキー「vsit_data」で基礎データを読み込み配列visit_ynに格納
+          let json_visit=localStorage.getItem('visit_data');
+          visit_yn=JSON.parse(json_visit); //[-1,-1,-1,-1,-1,-1]
+          //マーカーの内容を取得（関数spot_checkinの呼び出し）
+          spot_checkin(array,visit_yn);
+          //地図の表示（関数spot_mapの呼び出し）
+          spot_map(latitude,longitude,curlatitude,curlongitude);
+       }
+      else{
+        alert('ローカルストレージは使えません');
+      }
+    //このページのURLに付加されたパラメータの値から表示すべきマーカーの内容を取得する
+      function spot_checkin(markerList,Y_N){
+        //このページのURLに付加されたパラメータの値から表示すべきマーカーの内容を取得する
+          nspot=0;
+          spot_array=[-1,-1,-1]; //同時にチェックインできるスポットの番号(最大3)
+          for (var i = 0; i < markerList.length; i++) {
+            if(markerList[i][3]==latitude && markerList[i][4]==longitude){
+              nspot=nspot+1;  //同時にチェックイン可能なスポット数
+              spot_array[nspot-1]=i;  //同時にチェックイン可能なスポットの番号
+              //チェックイン可能距離[m]
+              checkin_distance=markerList[i][10]; 
+            }
+          }
+          //チェックイン対象の画像、名称、住所を表示;
+          if(nspot>3){
+                alert('同時にチェックイン可能なスポットが4箇所以上あり、システムが未対応です。北緯・東経が共に同一のスポットは3箇所以下にしてください。→システム管理者へ');
+            }else{
+                for(i=0;i<nspot;i++){
+                    i1=i+1;
+                    var ispot=spot_array[i];
+                    var e_img=document.getElementById("image" + i1);
+                    if(Y_N[ispot]>0){
+                        //過去にチェックインしている場合
+                        const str=array[ispot][8];
+                        const split_str=str.split(".");
+                        var file_name="image/" + split_str[0] + "_done." + split_str[1];
+                        e_img.src=file_name;
+                        flag_checkin=1;
+                    }else{
+                        //未だチェックインしていない場合
+                        e_img.src="image/" +markerList[ispot][8];
+                        flag_checkin=-1;
+                    }
+                    //名称と住所の書き出し
+                    var e_title=document.getElementById("title" + i1);
+                    e_title.textContent=markerList[ispot][2];
+                    if(i==0){
+                      var e_address=document.getElementById("address");
+                      e_address.textContent='住所: ' + markerList[ispot][6];
+                    }
+                  //画像にクリックイベントを付加
+                    e_img.addEventListener('click', function(event){
+                        //クリックされた画像のファイル名を調べる
+                        const clickedElement = event.target;
+                        var str= clickedElement.src
+                        let str_search = str.indexOf('image/') ;
+                        let str_text=str.substring(str_search);
+                        let str_file=str_text.replace("image/","")
+                        spot_jamp_detail_from_checkin(1,str_file,markerList)
+                    });     
+                  //スポットの名称にクリックイベントを付加
+                    e_title.addEventListener('click', function(event){
+                        //クリックされた画像のファイル名を調べる
+                        const clickedElement = event.target;
+                        var str_title= clickedElement.textContent
+                        spot_jamp_detail_from_checkin(2,str_title,markerList)
+                    });     
+                 }
+          }
+       } 
+      //画像がクリックされたときに発生するイベント
+      function spot_jamp_detail_from_checkin(flag_element,str_target,markerList){
+        let total_spot=markerList.length  
+        if(flag_element==1){
+            //クリックされた対象が画像の場合
+              for(i=0;i<total_spot;i++){
+                  const str=markerList[i][8];
+                  const split_str=str.split(".");
+                  var file_name1=str
+                  var file_name2=split_str[0] + "_done." + split_str[1];            
+                  if(str_target==file_name1 || str_target==file_name2){
+                    var k=i;
+                    break;
+                  }
+              }
+         }else{
+            //クリックされた対象がスポットの名称の場合
+              for(i=0;i<total_spot;i++){
+                  const str=markerList[i][2];
+                  if(str_target==str){
+                    var k=i;
+                    break;
+                  }          
+              }
+            }
+            //当該スポットのデータをウェブストレージに保存して、詳細ページに遷移
+            let s_title=markerList[k][2];          //スポットの名称を変数に代入
+            let s_img=markerList[k][8];            //スポットの画像ファイル名を変数に代入
+            let s_address=markerList[k][6];        //スポットの住所を変数に代入
+            let s_address_detail=markerList[k][7]; //スポットの場所の詳細を変数に代入
+            let s_era=markerList[k][5];            //スポットの年代を変数に代入
+            let s_explanation=markerList[k][9];    //スポットに関する説明を変数に代入
+            let s_yesno=markerList[k][11];         //スポットの訪問の有無を変数に代入
+            //詳細ボタンがクリックされたときに、当該スポットのデータの一部を配列に格納
+            let spot_array=[s_title,s_img,s_address,s_address_detail,s_era,s_explanation,s_yesno];
+            //ローカルストレージに「spot-selected」のキーで選択されたスポットのデータ配列を保存
+            //配列をJSONデータに返還し、json_stringという変数に一括代入
+              let json_string=JSON.stringify(spot_array);   
+              localStorage.setItem('selected-spot',json_string);
+            //詳細のページに遷移
+            window.location.href ='detail.html'
+        }        
+      function spot_map(latitude,longitude,curlatitude,curlongitude){
+          //地図関係
+            //地図の表示
+            L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
+                  attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
+              }).addTo(mymap);
+            mymap.locate({setView: false, maxZoom: 16, timeout: 20000}); 
+            //地図の表示範囲を設定する（スポットと現在位置のマーカーがすべて表示される）関数の呼び出し
+            MapDisplayBoundCheckin(latitude,longitude,curlatitude,curlongitude);            
+            //マップにスポットのマーカーをつける
+            L.marker([latitude,longitude],{icon : greenIcon}).addTo(mymap)
+            //前のページからパラメータとして渡された位置に現在地のマーカーを付ける
+            if (curMarker) {
+                          mymap.removeLayer(curMarker);
+                          curMarker=null;curMarker =L.marker([curlatitude, curlongitude], {icon: curIcon}).addTo(mymap);} else {curMarker =L.marker([curlatitude, curlongitude], {icon: curIcon}).addTo(mymap);}        
+            if(flag_checkin<0){
+              //現在位置の連続監視
+              var watch_id = navigator.geolocation.watchPosition(successCallback);//,errorCallback,position_options);  
+            }else{
+              //
+              var dist=document.getElementById("markerDistance");
+              dist.style.marginTop= "20px" ; //トップマージンを指定
+              dist.textContent= "すでにスタンプをゲットしています。";
+              dist.style.backgroundColor="magenta"; //背景色を指定
+            }
+        } 
+       //常時監視中、現在位置の取得が成功したときの処理           
+        function successCallback(position) {
+            var Curlat=Number(position.coords.latitude);
+            var Curlng=Number(position.coords.longitude);
+            var r=distance(longitude, latitude,Curlng,Curlat);  //現在地から対象地点までの距離(m)
+            //現在位置の移動に伴って地図をスライドさせる
+            if(Curlng>=lng_max){lng_max =Number(lng_max)+0.01;lng_min =Number(lng_min)+0.01;const bounds = L.latLngBounds([lat_min,lng_min],[lat_max,lng_max]);mymap.fitBounds(bounds)};
+            if(Curlng<lng_min){lng_min =Number(lng_min)-0.01;lng_max=Number(lng_max)-0.01;const bounds = L.latLngBounds([lat_min,lng_min],[lat_max,lng_max]);mymap.fitBounds(bounds)};
+            if(Curlat>=lat_max){lat_max =Number(lat_max)+0.01;lat_min =Number(lat_min)+0.01;const bounds = L.latLngBounds([lat_min,lng_min],[lat_max,lng_max]);mymap.fitBounds(bounds)};
+            if(Curlat<lat_min){lat_min =Number(lat_min)-0.01;lat_max =Number(lat_max)-0.01;const bounds = L.latLngBounds([lat_min,lng_min],[lat_max,lng_max]);mymap.fitBounds(bounds)};             
+
+
+            //現在地を表すマーカーの痕跡をなくして、最新の位置を地図に表示する。
+            if (curMarker) {
+                  mymap.removeLayer(curMarker);
+                  curMarker=null;curMarker =L.marker([Curlat, Curlng], {icon: curIcon}).addTo(mymap);} else {curMarker =L.marker([Curlat, Curlng], {icon: curIcon}).addTo(mymap);};
+            
+             //alert(longitude + ','+ latitude + ','+ Curlng + ','+ Curlat+ ','+  Math.round(r));
+            //現在地と対象地点の距離を表示（距離が一定値より小さくなるとチェックインできる）
+            var dist=document.getElementById("markerDistance");
+            dist.style.marginTop= "20px" ; //トップマージンを指定
+            if(Math.round(r)>checkin_distance)  //チェックインの範囲を指定
+              { 
+                //対象地点のチェックイン可能範囲の外側にいる場合の処理
+                dist.textContent='ここからの距離：'+  Math.round(r) +'m';
+                dist.style.backgroundColor="white";    //背景色を指定
+                dist.style.border="solid 2px blue"; //境界線の太さと色を指定
+                dist.style.textAlign = "center";  //センタリング
+                dist.style.fontSize="12pt";       //フォントサイズを指定
+                watch_id;
+              } else 
+              {
+                //対象地点のチェックイン可能範囲の内側にいる場合の処理
+                //文字ボタンの文字列とバックカラーなどを修正
+                dist.textContent='チェックインできます。ここをタップしてください。';
+                dist.style.border="solid 2px black";  //境界線の太さと色を指定
+                dist.style.backgroundColor="springgreen";    //背景色を指定
+                dist.style.textAlign = "center";      //センタリング
+                dist.style.fontSize="10pt";           //フォントサイズを指定
+                //文字ボタンをタップ可能にし、タップ後の処理を記述
+                dist.addEventListener('click',Stamp);
+                }
+          //チェックインの処理
+            function Stamp() {
+                  //文字ボタンの文字列などを変更し、文字ボタンのクリックを無効化する。
+                    dist.textContent= "スタンプをゲットしました！";
+                    dist.style.backgroundColor="magenta"; //背景色を指定
+                    //文字ボタンのオンクリック機能の削除
+                    dist.removeEventListener('click', Stamp)
+                    //現在地の連続監視機能を停止
+                    navigator.geolocation.clearWatch(watch_id); 
+                    //チェックインしたスポットの画像を「済」のマークが付いた写真に差し替える。
+                    for(i=0;i<nspot;i++){
+                      i1=i+1;
+                        var ispot=spot_array[i];
+                        var e_img=document.getElementById("image" + i1);
+                        const str=array[ispot][8];
+                        const split_str=str.split(".");
+                        var file_name=split_str[0] + "_done." + split_str[1];
+                        e_img.src=file_name;
+                        visit_yn[ispot]=1
+                      }
+                      //訪問済み→ローカルストレージに書き込み
+                      let json_string_visit=JSON.stringify(visit_yn);   
+                      localStorage.setItem('visit_data',json_string_visit);
+
+                    }
+                }
+        //２点間の距離の計算用関数
+        function distance(x1, y1, x2, y2) {
+          const RR=Math.PI/180;
+          y1 *= RR;
+          x1 *= RR;
+          y2 *= RR;
+          x2 *= RR;
+          return 6371 * Math.acos(Math.cos(y1) * Math.cos(y2) * Math.cos(x2 - x1) + Math.sin(y1) * Math.sin(y2))*1000;
+        }
+          //地図の表示範囲を設定する（スポットと現在位置のマーカーがすべて表示される）
+          function MapDisplayBoundCheckin(lat1,lng1,lat2,lng2){
+              //マーカの座標の最小値・最大値をサーチ
+              //alert(lat1 + ',' + lng1 + ',' + lat2 + ',' +lng2);
+              let lat_min=1000;
+              let lat_max=-1000;
+              let lng_min=1000;
+              let lng_max=-1000;
+              if(lat1<lat_min){lat_min=lat1};if(lat2<lat_min){lat_min=lat2};
+              if(lat1>lat_max){lat_max=lat1};if(lat2>lat_max){lat_max=lat2};
+              if(lng1<lng_min){lng_min=lng1};if(lng2<lng_min){lng_min=lng2};
+              if(lng1>lng_max){lng_max=lng1};if(lng2>lng_max){lng_max=lng2};
+              const bounds = L.latLngBounds([lat_min,lng_min],[lat_max,lng_max]);
+              // 地図をBoundsにフィットさせる
+              mymap.fitBounds(bounds);
+          }
+
+ </script>
+</body>
+</html>

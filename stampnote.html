@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel='stylesheet' href='css/menu.css'/>
+  <title>Document</title>
+</head>
+<style>
+  table{
+    width:100%;
+    table-layout:fixed;
+  }
+  .table-img{
+    width:100%;
+    text-align:center;
+    vertical-align: middle; /* 縦方向の中央揃え */
+  }
+  .table-text{
+    text-align: center; /* 横方向の中央揃え */
+    vertical-align: middle; /* 縦方向の中央揃え */
+    font-size: 65%;
+    overflow: hidden;
+    white-space:nowrap;
+  }
+  .page-title{
+    margin-top:8%;
+    text-align: center; /* 横方向の中央揃え */
+    font-size: 120%;
+  }
+  .title-img{
+   text-align: center;  /*横方向の中央揃え */
+    /*vertical-align: middle;  縦方向の中央揃え */
+  }
+  .text-end{
+    font-size:80%;
+    text-align: left;
+    color:blue
+  }
+</style>
+<body>
+  <nav>
+    <ul>
+    <li class=”current”><a href='index.html'>ホーム</a></li>
+    <li><a href='spotlist.html'>スポットリスト</a></li>
+    <li><a href='howtoplay.html'>遊び方</a></li>
+    <!-- <li><a href=”#”>Blog</a></li> -->
+    </ul>
+   </nav>
+  <div class="page-title">
+    スタンプ帳
+  </div>
+  <div class="title-img">
+    <img src="icon/stamp_rally.png" width="20%">
+  </div>
+  <table border="1" >
+    <p id="stamps" class="text-begin"></p>  
+    <tbody>
+      <tr>
+        <td>
+          <table>
+            <tr><td class="table-img"><img id="image1" width="70%" height="70%" ></td></tr>
+            <tr><td id="spot1" class="table-text"></td></tr>
+          </table>
+         </td>
+         <td>
+          <table>
+            <tr><td class="table-img"><img id="image2" width="70%" height="70%" ></td></tr>
+            <tr><td id="spot2" class="table-text"></td></tr>
+          </table>
+         </td>
+         <td>
+          <table>
+            <tr><td class="table-img"><img id="image3" width="70%" height="70%" ></td></tr>
+            <tr><td id="spot3" class="table-text"></td></tr>
+          </table>
+         </td>
+         <td>
+          <table>
+            <tr><td class="table-img"><img id="image4" width="70%" height="70%" ></td></tr>
+            <tr><td id="spot4" class="table-text"></td></tr>
+          </table>
+         </td>
+      </tr>
+      <tr>
+        <td>
+          <table>
+            <tr><td class="table-img"><img id="image5" width="70%" height="70%" ></td></tr>
+            <tr><td id="spot5" class="table-text"></td></tr>
+          </table>
+         </td>
+        <td>
+          <table>
+            <tr><td class="table-img"><img id="image6" width="70%" height="70%" ></td></tr>
+            <tr><td id="spot6" class="table-text"></td></tr>
+          </table>
+         </td>
+       </tr>
+    </tbody>
+  </table> 
+  <p class="text-end">※オレンジ色のみかんのスポットは訪問済みです。</p>
+  <script>
+      if(window.localStorage){
+          //ローカルストレージからキー「all_basic_data」で基礎データを読み込み配列arrayに格納
+          let json=localStorage.getItem('all_basic_data');
+          array=JSON.parse(json);
+          //ローカルストレージからキー「vsit_data」で基礎データを読み込み配列visit_ynに格納
+          let json_visit=localStorage.getItem('visit_data');
+          visit_yn=JSON.parse(json_visit); //[-1,-1,-1,-1,-1,-1]
+          let _count=0
+          for(i=0;i<array.length;i++){
+              i1=i+1;
+              var e_spot=document.getElementById("spot" +i1);
+              e_spot.textContent=array[i][2];
+              //htmlで記述したTableの画像セルのID→同セルにe_imgというタグをつける
+              var e_img=document.getElementById("image" +i1);
+              //スポットが訪問済みか否かで、表示するスタンプを変える
+              if(visit_yn[i]>0){ 
+                  e_img.src="icon/stamp_good.png" 
+                  _count=_count+1
+              }
+              else{
+                  e_img.src="icon/stamp_ng.png"
+              }
+              //ゲットしたスポット数
+              var e_stamps=document.getElementById("stamps");
+              e_stamps.textContent='あなたがゲットしているスタンプの数は' + _count + '個です。';
+              //画像にクリックイベントを付加
+                    e_img.addEventListener('click', function(event){
+                        //クリックされた画像のファイル名を調べる
+                        const clickedElement = event.target;
+                        var str= clickedElement.id
+                        let str_search = str.indexOf('image') ;
+                        let str_text=str.substring(str_search);
+                        let str_id_no=str_text.replace("image","")
+                        spot_jamp_detail_from_stampnote(1,str_id_no,array)
+                    });
+              //スポットの名称にクリックイベントを付加
+                    e_spot.addEventListener('click', function(event){
+                        //クリックされた画像のファイル名を調べる
+                        const clickedElement = event.target;
+                        var str= clickedElement.id
+                        let str_search = str.indexOf('spot') ;
+                        let str_text=str.substring(str_search);
+                        let str_id_no=str_text.replace("spot","")
+                        spot_jamp_detail_from_stampnote(2,str_id_no,array)
+                    });          
+            }
+
+          //画像がクリックされたときに発生するイベント
+          function spot_jamp_detail_from_stampnote(flag_element,str_target,markerList){
+              let total_spot=markerList.length  
+              let k=str_target-1
+              //当該スポットのデータをウェブストレージに保存して、詳細ページに遷移
+              let s_title=markerList[k][2];          //スポットの名称を変数に代入
+              let s_img=markerList[k][8];            //スポットの画像ファイル名を変数に代入
+              let s_address=markerList[k][6];        //スポットの住所を変数に代入
+              let s_address_detail=markerList[k][7]; //スポットの場所の詳細を変数に代入
+              let s_era=markerList[k][5];            //スポットの年代を変数に代入
+              let s_explanation=markerList[k][9];    //スポットに関する説明を変数に代入
+              let s_yesno=markerList[k][11];         //スポットの訪問の有無を変数に代入
+              //詳細ボタンがクリックされたときに、当該スポットのデータの一部を配列に格納
+              let spot_array=[s_title,s_img,s_address,s_address_detail,s_era,s_explanation,s_yesno];
+              //ローカルストレージに「spot-selected」のキーで選択されたスポットのデータ配列を保存
+              //配列をJSONデータに返還し、json_stringという変数に一括代入
+                let json_string=JSON.stringify(spot_array);   
+                localStorage.setItem('selected-spot',json_string);
+              //詳細のページに遷移
+              window.location.href ='detail.html'
+            }        
+      }
+      else
+      {
+            alert('ローカルストレージは使えません');
+      }
+  </script> 
+</body>
+</html>
