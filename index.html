@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>スタンプラリー19</title>
+    <title>スタンプラリー20</title>
   	<meta charset="utf-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -78,9 +78,9 @@
             )            
               //取得したデータは連想配列
               .then(markerList => {
-                //for (var i = 0; i < markerList.length; i++) {
-                   //alert('ファイルの読み込み成功しましたよ。' + markerList[i].id + ',' + markerList[i].name + ',' + markerList[i].address + '\n')
-                //}
+                for (var i = 0; i < markerList.length; i++) {
+                   alert('ファイルの読み込み成功しましたよ。' + markerList[i].id + ',' + markerList[i].lat + ',' + markerList[i].lng + '\n')
+                }
           //ローカルストレージに災害碑の基礎データを保存
           if(window.localStorage){
             //配列markerListをJSONデータに変換し、json_stringという変数に一括代入し、 ローカルストレージに書き込み　キーは「all_basic_data」
