@@ -201,7 +201,7 @@
         if(flag_element==1){
             //クリックされた対象が画像の場合
               for(i=0;i<total_spot;i++){
-                  const str=markerList[i][8];
+                  const str=markerList[i].file;
                   const split_str=str.split(".");
                   var file_name1=str
                   var file_name2=split_str[0] + "_done." + split_str[1];            
