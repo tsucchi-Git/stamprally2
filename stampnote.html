@@ -111,7 +111,7 @@
           for(i=0;i<array.length;i++){
               i1=i+1;
               var e_spot=document.getElementById("spot" +i1);
-              e_spot.textContent=array[i][2];
+              e_spot.textContent=array[i].name;
               //htmlで記述したTableの画像セルのID→同セルにe_imgというタグをつける
               var e_img=document.getElementById("image" +i1);
               //スポットが訪問済みか否かで、表示するスタンプを変える
@@ -152,13 +152,13 @@
               let total_spot=markerList.length  
               let k=str_target-1
               //当該スポットのデータをウェブストレージに保存して、詳細ページに遷移
-              let s_title=markerList[k][2];          //スポットの名称を変数に代入
-              let s_img=markerList[k][8];            //スポットの画像ファイル名を変数に代入
-              let s_address=markerList[k][6];        //スポットの住所を変数に代入
-              let s_address_detail=markerList[k][7]; //スポットの場所の詳細を変数に代入
-              let s_era=markerList[k][5];            //スポットの年代を変数に代入
-              let s_explanation=markerList[k][9];    //スポットに関する説明を変数に代入
-              let s_yesno=markerList[k][11];         //スポットの訪問の有無を変数に代入
+              let s_title=markerList[k].name;          //スポットの名称を変数に代入
+              let s_img=markerList[k].file;            //スポットの画像ファイル名を変数に代入
+              let s_address=markerList[k].address;        //スポットの住所を変数に代入
+              let s_address_detail=markerList[k].detail; //スポットの場所の詳細を変数に代入
+              let s_era=markerList[k].era;            //スポットの年代を変数に代入
+              let s_explanation=markerList[k].exp;    //スポットに関する説明を変数に代入
+              let s_yesno=markerList[k].yn;         //スポットの訪問の有無を変数に代入
               //詳細ボタンがクリックされたときに、当該スポットのデータの一部を配列に格納
               let spot_array=[s_title,s_img,s_address,s_address_detail,s_era,s_explanation,s_yesno];
               //ローカルストレージに「spot-selected」のキーで選択されたスポットのデータ配列を保存
