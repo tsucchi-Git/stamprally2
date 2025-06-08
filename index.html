@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>スタンプラリー13</title>
+    <title>スタンプラリー14</title>
   	<meta charset="utf-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -111,7 +111,6 @@
           {
             alert('ローカルストレージは使えません');
           }
-	   alert('ローカルストレージに書き込み');
 	  //表示するタイルレイヤのURLとAttributionコントロールの記述を設定して、地図に追加する
           L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
               attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
@@ -151,6 +150,7 @@
               alert("現在地を取得できませんでした。" + e.message);
           }
           function MarkerShow() {
+	  alert(markerList.length);
               for (var i = 0; i < markerList.length; i++) {
                 var marker_lat=markerList[i].lat;  //スポットの北緯
                 var marker_lng=markerList[i].lng;  //スポットの東経
