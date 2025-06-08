@@ -188,9 +188,9 @@
       //スポット一覧を表示する
       function spot_show(array,visit_yn){
         //すべてのスポットの「名称」と「訪問の有無」をローカルストレージに保存（キーは「get-yesno」）→スタンプ帳用
-            let spot_array_all=[array[0][2],array[0][11]];
+            let spot_array_all=[array[0].name,array[0].yn];
             for(let i=1 ;i<array.length ;i++){
-            spot_array_all.push(array[i][2]);spot_array_all.push(array[i][11])
+            spot_array_all.push(array[i].name);spot_array_all.push(array[i].yn)
         }
         //各スポットが訪問済みか否かのデータをローカルストレージから読み込む
         if(window.localStorage){
@@ -203,18 +203,18 @@
             }
         //ウェブページへの書き出し  
         for(let i=0 ;i<array.length ;i++){
-          let s_number=array[i][1];
+          let s_number=array[i].id;
           let s_yesno_temp=visit_yn[i];
           if(s_yesno_temp<0){
             s_yesno='未'
           }else{
             s_yesno='済'
           }
-          let s_img=array[i][8];
-          let s_title=array[i][2];
-          let s_address=array[i][6];
-          let s_address_detail=array[i][7];
-          let s_era=array[i][5];
+          let s_img=array[i].file;
+          let s_title=array[i].name;
+          let s_address=array[i].address;
+          let s_address_detail=array[i].detail;
+          let s_era=array[i].era;
           // if(i==array.length-1){
           //   alert(s_number,s_yesno,s_img,s_title)
           // }
