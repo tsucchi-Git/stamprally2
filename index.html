@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>スタンプラリー10</title>
+    <title>スタンプラリー11</title>
   	<meta charset="utf-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -81,7 +81,6 @@
                 //for (var i = 0; i < markerList.length; i++) {
                    //alert('ファイルの読み込み成功しましたよ。' + markerList[i].id + ',' + markerList[i].name + ',' + markerList[i].address + '\n')
                 //}
-	      })
 	   	alert(markerList.length);
           //ローカルストレージに災害碑の基礎データを保存
           if(window.localStorage){
@@ -106,6 +105,7 @@
               //ローカルストレージに書き込み
               let json_string_visit=JSON.stringify(visit_yn);   
               localStorage.setItem('visit_data',json_string_visit);
+	alert('ローカルストレージに書き込み');
             }
           }
           else
