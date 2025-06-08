@@ -165,12 +165,12 @@
                         flag_checkin=1;
                     }else{
                         //未だチェックインしていない場合
-                        e_img.src="image/" +markerList[ispot][8];
+                        e_img.src="image/" +markerList[ispot].file;
                         flag_checkin=-1;
                     }
                     //名称と住所の書き出し
                     var e_title=document.getElementById("title" + i1);
-                    e_title.textContent=markerList[ispot][2];
+                    e_title.textContent=markerList[ispot].name;
                     if(i==0){
                       var e_address=document.getElementById("address");
                       e_address.textContent='住所: ' + markerList[ispot].address;
@@ -213,7 +213,7 @@
          }else{
             //クリックされた対象がスポットの名称の場合
               for(i=0;i<total_spot;i++){
-                  const str=markerList[i][2];
+                  const str=markerList[i].name;
                   if(str_target==str){
                     var k=i;
                     break;
