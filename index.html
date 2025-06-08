@@ -73,16 +73,16 @@
                 //jsonはオブジェクト（連想配列）
                 return response.json()
               })
+              //通信にエラーが発生した場合
+              .catch(error => {alert('ファイルを読み込むことができませんでした。')}
+            )            
               //取得したデータは連想配列
               .then(markerList => {
                 //for (var i = 0; i < markerList.length; i++) {
                    //alert('ファイルの読み込み成功しましたよ。' + markerList[i].id + ',' + markerList[i].name + ',' + markerList[i].address + '\n')
                 //}
+	   	alert(markerList.length);
               })
-              //通信にエラーが発生した場合
-              .catch(error => {alert('ファイルを読み込むことができませんでした。')}
-            )            
-	   alert(markerList.length);
           //ローカルストレージに災害碑の基礎データを保存
           if(window.localStorage){
             //配列markerListをJSONデータに変換し、json_stringという変数に一括代入し、 ローカルストレージに書き込み　キーは「all_basic_data」
