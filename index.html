@@ -129,9 +129,8 @@
           mymap.on('locationerror', onLocationError);
     
           mymap.locate({setView: true, maxZoom: 18, timeout: 20000});
-       })
 
-          //マーカー表示用の関数（マーカーがクリックされたときに、新しいページに遷移
+	   //マーカー表示用の関数（マーカーがクリックされたときに、新しいページに遷移
           //現在地の取得に成功した場合の処理の関数
           function onLocationFound(e) {
               var lat=Math.round(Number(e.latlng.lat)*1000)/1000;  //文字列を数値化後(Number)、小数点以下4桁目を四捨五入
@@ -184,6 +183,8 @@
               // 地図をBoundsにフィットさせる
               mymap.fitBounds(bounds);
           }
+     })
+
  </script>
   </body>
 </html>
