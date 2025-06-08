@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>スタンプラリー16</title>
+    <title>スタンプラリー17</title>
   	<meta charset="utf-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -151,9 +151,9 @@
               for (var i = 0; i < markerList.length; i++) {
                 var marker_lat=markerList[i].lat;  //スポットの北緯
                 var marker_lng=markerList[i].lng;  //スポットの東経
+	  	alert(marker_lat + ',' + marker_lng);
                 L.marker([marker_lat,marker_lng],{icon : greenIcon}).addTo(mymap)
               .on('click',function(e){
-	  alert("markershow" + markerList.length);
 
 		//遷移するページのURLの後にスポットの経緯度と現在地の経緯度を付ける
                 var url="checkin.html?lat="+e.latlng.lat+"&lng=" +e.latlng.lng + "&clat=" + Curlat + "&clng=" + Curlng ;
