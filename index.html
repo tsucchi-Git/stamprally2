@@ -151,7 +151,7 @@
 		      for (var i = 0; i < markerList.length; i++) {
 			var marker_lat=markerList[i].lat;  //スポットの北緯
 			var marker_lng=markerList[i].lng;  //スポットの東経
-			alert(markerList[i].lat + ',' + marker_lng);
+			//alert(markerList[i].lat + ',' + marker_lng);
 			L.marker([marker_lat,marker_lng],{icon : greenIcon}).addTo(mymap)
 		      .on('click',function(e){
 	
