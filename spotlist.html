@@ -188,19 +188,19 @@
       //スポット一覧を表示する
       function spot_show(array,visit_yn){
         //すべてのスポットの「名称」と「訪問の有無」をローカルストレージに保存（キーは「get-yesno」）→スタンプ帳用
-            let spot_array_all=[array[0].name,array[0].yn];
-            for(let i=1 ;i<array.length ;i++){
-            spot_array_all.push(array[i].name);spot_array_all.push(array[i].yn)
-        }
-        //各スポットが訪問済みか否かのデータをローカルストレージから読み込む
-        if(window.localStorage){
-              let json_string=JSON.stringify(spot_array_all);   //配列をJSONデータに返還し、json_stringという変数に一括代入
-              localStorage.setItem('get-yesno',json_string)
-            }
-            else
-            {
-              alert('ローカルストレージは使えません');
-            }
+        //     let spot_array_all=[array[0].name,array[0].yn];
+        //     for(let i=1 ;i<array.length ;i++){
+        //     spot_array_all.push(array[i].name);spot_array_all.push(array[i].yn)
+        // }
+        // //各スポットが訪問済みか否かのデータをローカルストレージから読み込む
+        // if(window.localStorage){
+        //       let json_string=JSON.stringify(spot_array_all);   //配列をJSONデータに返還し、json_stringという変数に一括代入
+        //       localStorage.setItem('get-yesno',json_string)
+        //     }
+        //     else
+        //     {
+        //       alert('ローカルストレージは使えません');
+        //     }
         //ウェブページへの書き出し  
         for(let i=0 ;i<array.length ;i++){
           let s_number=array[i].id;
