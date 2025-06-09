@@ -121,6 +121,9 @@
     // alert(curlatitude + ',' + curlongitude);
     // alert(latitude + ',' + longitude);
       if(window.localStorage){
+          //エリア番号の読み取り
+          let json=localStorage.getItem('area_no%');
+          let areano=JSON.parse(json);          
           //ローカルストレージからキー「all_basic_data」で基礎データを読み込み配列arrayに格納
           let json=localStorage.getItem('all_basic_data');
           array=JSON.parse(json);
