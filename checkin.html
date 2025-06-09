@@ -94,6 +94,7 @@
     var lat_max;
     var lng_min;
     var lng_max;
+    var area_no;
     //新しいアイコンの定義
         //緑の葉
     var greenIcon = L.icon({
@@ -122,14 +123,16 @@
     // alert(latitude + ',' + longitude);
       if(window.localStorage){
           //エリア番号の読み取り
-          let area_no=localStorage.getItem('area_no%');
-          //ローカルストレージからキー「all_basic_data」で基礎データを読み込み配列arrayに格納
+          area_no=localStorage.getItem('area_no%');
+          //ローカルストレージからキー「all_basic_data%地域番号」で基礎データを読み込み配列arrayに格納
           key_all="all_basic_data%" + area_no
           //let json=localStorage.getItem('all_basic_data');
           let json=localStorage.getItem(key_all);
           array=JSON.parse(json);
+          //ローカルストレージからキー「all_basic_data」で基礎データを読み込み配列arrayに格納
+          key_visit="visit_data%" + area_no
           //ローカルストレージからキー「vsit_data」で基礎データを読み込み配列visit_ynに格納
-          let json_visit=localStorage.getItem('visit_data');
+          let json_visit=localStorage.getItem(key_visit);
           visit_yn=JSON.parse(json_visit); //[-1,-1,-1,-1,-1,-1]
           //マーカーの内容を取得（関数spot_checkinの呼び出し）
           spot_checkin(array,visit_yn);
@@ -235,9 +238,10 @@
             //詳細ボタンがクリックされたときに、当該スポットのデータの一部を配列に格納
             let spot_array=[s_title,s_img,s_address,s_address_detail,s_era,s_explanation,s_yesno];
             //ローカルストレージに「spot-selected」のキーで選択されたスポットのデータ配列を保存
+              key_select="selected-spot%" + area_no
             //配列をJSONデータに返還し、json_stringという変数に一括代入
               let json_string=JSON.stringify(spot_array);   
-              localStorage.setItem('selected-spot',json_string);
+              localStorage.setItem(key-select,json_string);
             //詳細のページに遷移
             window.location.href ='detail.html'
         }        
@@ -330,8 +334,9 @@
                         visit_yn[ispot]=1
                       }
                       //訪問済み→ローカルストレージに書き込み
+                      key_visit="visit_data%" + area_no;
                       let json_string_visit=JSON.stringify(visit_yn);   
-                      localStorage.setItem('visit_data',json_string_visit);
+                      localStorage.setItem(key_visit,json_string_visit);
 
                     }
                 }
