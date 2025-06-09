@@ -85,13 +85,15 @@
 		  if(window.localStorage){
 		    //配列markerListをJSONデータに変換し、json_stringという変数に一括代入し、 ローカルストレージに書き込み　キーは「all_basic_data」
 		    let json_string=JSON.stringify(markerList);
-		    let key_all=”all_basic_data%" + markerLust[0].areaid;
+		    let key_all=”all_basic_data%" + markerList[0].areaid;
+				alert(key_all);
 		    localStorage.setItem(key_all,json_string)
 		    //「visit_data」というキーでローカルストレージにデータが保存されているか否かを確認する。
 		    var flag=-1
 		    for (key in localStorage) {
 			if (localStorage.hasOwnProperty(key)) {
 			    key_visit="vsit_data%" + markerList[0].areaid;
+				alert(key_visit);
 			    if(key==key_visit){
 			      flag=1
 			    }
@@ -106,6 +108,7 @@
 		      //ローカルストレージに書き込み
 		      let json_string_visit=JSON.stringify(visit_yn); 
 		      key_visit="vsit_data%" + markerList[0].areaid;
+				alert(key_visit);
 		      localStorage.setItem(key_visit,json_string_visit);
 		    }
 		  }
