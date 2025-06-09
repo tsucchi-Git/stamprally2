@@ -125,11 +125,9 @@
           let area_no=localStorage.getItem('area_no%');
           //ローカルストレージからキー「all_basic_data」で基礎データを読み込み配列arrayに格納
           key_all="all_basic_data%" + area_no
-          alert(key_all);
           //let json=localStorage.getItem('all_basic_data');
           let json=localStorage.getItem(key_all);
           array=JSON.parse(json);
-          alert(array.length);
           //ローカルストレージからキー「vsit_data」で基礎データを読み込み配列visit_ynに格納
           let json_visit=localStorage.getItem('visit_data');
           visit_yn=JSON.parse(json_visit); //[-1,-1,-1,-1,-1,-1]
