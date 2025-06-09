@@ -122,14 +122,14 @@
     // alert(latitude + ',' + longitude);
       if(window.localStorage){
           //エリア番号の読み取り
-          alert('0');
-          let json=localStorage.getItem('area_no%');
-          alert('1');
-          let area_no=JSON.parse(json);   
-          alert(area_no);
-          //ローカルストレージからキー「all_basic_data」で基礎データを読み込み配列arrayに格納
-          key_all="all_basic_data%" + area_no
-          let json=localStorage.getItem(key_all);
+          // alert('0');
+          // let json=localStorage.getItem('area_no%');
+          // alert('1');
+          // let area_no=JSON.parse(json);   
+          // alert(area_no);
+          // //ローカルストレージからキー「all_basic_data」で基礎データを読み込み配列arrayに格納
+          // key_all="all_basic_data%" + area_no
+          let json=localStorage.getItem('all_basic_data');
           array=JSON.parse(json);
           //ローカルストレージからキー「vsit_data」で基礎データを読み込み配列visit_ynに格納
           let json_visit=localStorage.getItem('visit_data');
