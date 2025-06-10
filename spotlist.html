@@ -243,7 +243,7 @@
             //ローカルストレージに「spot-selected」のキーで選択されたスポットのデータ配列を保存
             if(window.localStorage){
               //配列をJSONデータに返還し、json_stringという変数に一括代入
-            　key_select="selected-spot%" + area_no;
+            　key_select="selected_spot%" + area_no;
               let json_string=JSON.stringify(spot_array);   
               localStorage.setItem(key_select,json_string)
             }
