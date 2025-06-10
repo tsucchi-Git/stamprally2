@@ -79,7 +79,7 @@
         //エリア番号の読み取り
         let area_no=localStorage.getItem('area_no%');
         //ローカルストレージからキー「selected-spot%地域番号」で基礎データを読み込み配列arrayに格納
-        key_select="selected-spot%" + area_no
+        key_select="selected_spot%" + area_no
         let json=localStorage.getItem(key_select); //ローカルストレージからキー「selected-spot%地域番号」で保存したデータを取得
         let spot_array=JSON.parse(json);  //取得したJSONデータを配列に変換し、配列名をspot_array（任意）とする
         let [s_title,s_img,s_address,s_address_detail,s_era,s_explanation,s_yesno]=spot_array; //配列の要素を変数に代入
