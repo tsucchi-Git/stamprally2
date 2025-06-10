@@ -237,11 +237,11 @@
             let s_yesno=markerList[k].yn;         //スポットの訪問の有無を変数に代入
             //詳細ボタンがクリックされたときに、当該スポットのデータの一部を配列に格納
             let spot_array=[s_title,s_img,s_address,s_address_detail,s_era,s_explanation,s_yesno];
-            //ローカルストレージに「spot-selected」のキーで選択されたスポットのデータ配列を保存
-              key_select="selected-spot%" + area_no
+            //ローカルストレージに「selected_spot%地域番号」のキーで選択されたスポットのデータ配列を保存
+              key_select="selected_spot%" + area_no
             //配列をJSONデータに返還し、json_stringという変数に一括代入
               let json_string=JSON.stringify(spot_array);   
-              localStorage.setItem(key-select,json_string);
+              localStorage.setItem(key_select,json_string);
             //詳細のページに遷移
             window.location.href ='detail.html'
         }        
