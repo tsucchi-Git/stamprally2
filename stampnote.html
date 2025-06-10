@@ -101,7 +101,8 @@
   <p class="text-end">※オレンジ色のみかんのスポットは訪問済みです。</p>
   <script>
       if(window.localStorage){
-          //ローカルストレージからキー「all_basic_data」で基礎データを読み込み配列arrayに格納
+                　key_select="selected-spot%" + area_no;  
+        //ローカルストレージからキー「all_basic_data」で基礎データを読み込み配列arrayに格納
           let json=localStorage.getItem('all_basic_data');
           array=JSON.parse(json);
           //ローカルストレージからキー「vsit_data」で基礎データを読み込み配列visit_ynに格納
