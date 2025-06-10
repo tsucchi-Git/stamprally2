@@ -238,7 +238,7 @@
           e_img.addEventListener('click', function(){spot_jamp_detail(i)});
           button_detail.addEventListener('click', function(){spot_jamp_detail(i)});
         function spot_jamp_detail(i){
-            let s_explanation=array[i][9];//スポットに関する説明を変数に代入
+            let s_explanation=array[i].exp;//スポットに関する説明を変数に代入
             let spot_array=[s_title,s_img,s_address,s_address_detail,s_era,s_explanation,s_yesno];//詳細ボタンがクリックされたときに、当該スポットのデータの一部を配列に格納
             //ローカルストレージに「spot-selected」のキーで選択されたスポットのデータ配列を保存
             if(window.localStorage){
