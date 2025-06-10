@@ -110,8 +110,8 @@
           let json=localStorage.getItem(key_all);        　
           array=JSON.parse(json);
           //ローカルストレージからキー「vsit_data」で基礎データを読み込み配列visit_ynに格納
-          key_select="visit_data%" + area_no;  
-          let json_visit=localStorage.getItem(key_select);
+          key_visit="visit_data%" + area_no;  
+          let json_visit=localStorage.getItem(key_visit);
           visit_yn=JSON.parse(json_visit); //[-1,-1,-1,-1,-1,-1]
           let _count=0
           for(i=0;i<array.length;i++){
