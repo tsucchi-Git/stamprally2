@@ -151,6 +151,8 @@
 		  //現在地の取得に失敗した場合の処理の関数
 		  function onLocationError(e) {
 		      alert("現在地を取得できませんでした。" + e.message);
+		　　　//ページの再読み込み
+		      location.reload();
 		  }
 		  function MarkerShow() {
 		      for (var i = 0; i < markerList.length; i++) {
