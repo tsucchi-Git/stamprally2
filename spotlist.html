@@ -171,13 +171,18 @@
   </table>
    
   <script>
-
+      var area_no;
       if(window.localStorage){
-          //ローカルストレージの基礎データを取得→配列名arrayに格納、キーは「all_basic_data」
-          let json=localStorage.getItem('all_basic_data');
+          //エリア番号の読み取り
+　　      area_no=localStorage.getItem('area_no%');
+    　    //ローカルストレージからキー「selected-spot%地域番号」で基礎データを読み込み配列arrayに格納
+      　  key_all="all_basic_data%" + area_no;
+          //ローカルストレージの基礎データを取得→配列名arrayに格納、キーは「all_basic_data%地域番号」
+          let json=localStorage.getItem(key_all);
           let array=JSON.parse(json);
            //ローカルストレージからキー「vsit_data」で基礎データを読み込み配列visit_ynに格納
-          let json_visit=localStorage.getItem('visit_data');
+          key_visit="visit_data%" +area_no;
+          let json_visit=localStorage.getItem(key_visit);
           visit_yn=JSON.parse(json_visit); //[-1,-1,-1,-1,-1,-1]
           //関数spotshowの呼び出し
           spot_show(array,visit_yn);
@@ -238,8 +243,9 @@
             //ローカルストレージに「spot-selected」のキーで選択されたスポットのデータ配列を保存
             if(window.localStorage){
               //配列をJSONデータに返還し、json_stringという変数に一括代入
+            　key_select="selected-spot%" + area_no;
               let json_string=JSON.stringify(spot_array);   
-              localStorage.setItem('selected-spot',json_string)
+              localStorage.setItem(key_select,json_string)
             }
             else
             {
