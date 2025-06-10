@@ -100,13 +100,18 @@
   </table> 
   <p class="text-end">※オレンジ色のみかんのスポットは訪問済みです。</p>
   <script>
+      var area_no;
       if(window.localStorage){
-                　key_select="selected-spot%" + area_no;  
-        //ローカルストレージからキー「all_basic_data」で基礎データを読み込み配列arrayに格納
-          let json=localStorage.getItem('all_basic_data');
+          //エリア番号の読み取り
+　　      area_no=localStorage.getItem('area_no%');
+    　    //ローカルストレージからキー「selected-spot%地域番号」で基礎データを読み込み配列arrayに格納
+      　  key_all="all_basic_data%" + area_no;
+          //ローカルストレージの基礎データを取得→配列名arrayに格納、キーは「all_basic_data%地域番号」
+          let json=localStorage.getItem(key_all);        　
           array=JSON.parse(json);
           //ローカルストレージからキー「vsit_data」で基礎データを読み込み配列visit_ynに格納
-          let json_visit=localStorage.getItem('visit_data');
+          key_select="visit_data%" + area_no;  
+          let json_visit=localStorage.getItem(key_select);
           visit_yn=JSON.parse(json_visit); //[-1,-1,-1,-1,-1,-1]
           let _count=0
           for(i=0;i<array.length;i++){
@@ -162,10 +167,11 @@
               let s_yesno=markerList[k].yn;         //スポットの訪問の有無を変数に代入
               //詳細ボタンがクリックされたときに、当該スポットのデータの一部を配列に格納
               let spot_array=[s_title,s_img,s_address,s_address_detail,s_era,s_explanation,s_yesno];
-              //ローカルストレージに「spot-selected」のキーで選択されたスポットのデータ配列を保存
+              //ローカルストレージに「selected-spot%地域番号」のキーで選択されたスポットのデータ配列を保存
               //配列をJSONデータに返還し、json_stringという変数に一括代入
+                key_select="selected_spot%" + area_no;
                 let json_string=JSON.stringify(spot_array);   
-                localStorage.setItem('selected-spot',json_string);
+                localStorage.setItem(key_select,json_string);
               //詳細のページに遷移
               window.location.href ='detail.html'
             }        
