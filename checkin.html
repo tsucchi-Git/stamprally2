@@ -89,7 +89,7 @@
     var curpoint = [curlatitude, curlongitude]; 
     var nspot; //同時にチェックインできるスポットの数（同じ緯度・経度に複数のスポットがある場合）   
     var spot_array; //チェックインできるスポットの地域内整理番号（最大３スポット）
-    var array; //index.htmlで読み込まれたJSONデータ（ウェブストレージ）
+    var markerList; //index.htmlで読み込まれたJSONデータ（ウェブストレージ）
     var visit_yn; //各スポットを訪問したか否かを表す配列
     var lat_min;
     var lat_max;
@@ -129,14 +129,16 @@
           key_all="all_basic_data%" + area_no
           //let json=localStorage.getItem('all_basic_data');
           let json=localStorage.getItem(key_all);
-          array=JSON.parse(json);
+          //array=JSON.parse(json);
+          markerList=JSON.parse(json);
           //ローカルストレージからキー「all_basic_data」で基礎データを読み込み配列arrayに格納
           key_visit="visit_data%" + area_no
           //ローカルストレージからキー「vsit_data」で基礎データを読み込み配列visit_ynに格納
           let json_visit=localStorage.getItem(key_visit);
           visit_yn=JSON.parse(json_visit); //[-1,-1,-1,-1,-1,-1]
           //マーカーの内容を取得（関数spot_checkinの呼び出し）
-          spot_checkin(array,visit_yn);
+          //spot_checkin(array,visit_yn);
+          spot_checkin(visit_yn);
           //地図の表示（関数spot_mapの呼び出し）
           spot_map(latitude,longitude,curlatitude,curlongitude);
        }
@@ -144,7 +146,8 @@
         alert('ローカルストレージは使えません');
       }
     //このページのURLに付加されたパラメータの値から表示すべきマーカーの内容を取得する
-      function spot_checkin(markerList,Y_N){
+      //function spot_checkin(markerList,Y_N){
+        function spot_checkin(Y_N){
         //このページのURLに付加されたパラメータの値から表示すべきマーカーの内容を取得する
           nspot=0;
           spot_array=[-1,-1,-1]; //同時にチェックインできるスポットの番号(最大3)
@@ -165,8 +168,8 @@
                     var ispot=spot_array[i];
                     var e_img=document.getElementById("image" + i1);
                     if(Y_N[ispot]>0){
-                        //過去にチェックインしている場合
-                        const str=array[ispot][8];
+                        //過去にチェックインしている場合、画像ファイル名を*_done.～に変更
+                        const str=markerList[ispot].file;
                         const split_str=str.split(".");
                         var file_name="image/" + split_str[0] + "_done." + split_str[1];
                         e_img.src=file_name;
@@ -198,13 +201,15 @@
                         //クリックされた画像のファイル名を調べる
                         const clickedElement = event.target;
                         var str_title= clickedElement.textContent
-                        spot_jamp_detail_from_checkin(2,str_title,markerList)
+                        spot_jamp_detail_from_checkin(2,str_title)
+                        //spot_jamp_detail_from_checkin(2,str_title,markerList)
                     });     
                  }
           }
        } 
       //画像がクリックされたときに発生するイベント
-      function spot_jamp_detail_from_checkin(flag_element,str_target,markerList){
+      //function spot_jamp_detail_from_checkin(flag_element,str_target,markerList){
+      function spot_jamp_detail_from_checkin(flag_element,str_target){
         let total_spot=markerList.length  
         if(flag_element==1){
             //クリックされた対象が画像の場合
@@ -263,7 +268,7 @@
                           curMarker=null;curMarker =L.marker([curlatitude, curlongitude], {icon: curIcon}).addTo(mymap);} else {curMarker =L.marker([curlatitude, curlongitude], {icon: curIcon}).addTo(mymap);}        
             if(flag_checkin<0){
               //現在位置の連続監視
-              var watch_id = navigator.geolocation.watchPosition(successCallback);//,errorCallback,position_options);  
+              watch_id = navigator.geolocation.watchPosition(successCallback);//,errorCallback,position_options);  
             }else{
               //
               var dist=document.getElementById("markerDistance");
@@ -301,7 +306,6 @@
                 dist.style.border="solid 2px blue"; //境界線の太さと色を指定
                 dist.style.textAlign = "center";  //センタリング
                 dist.style.fontSize="12pt";       //フォントサイズを指定
-                watch_id;
               } else 
               {
                 //対象地点のチェックイン可能範囲の内側にいる場合の処理
