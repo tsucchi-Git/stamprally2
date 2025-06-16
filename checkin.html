@@ -131,7 +131,6 @@
           let json=localStorage.getItem(key_all);
           //array=JSON.parse(json);
           markerList=JSON.parse(json);
-        　alert(markerList[0].name);
           //ローカルストレージからキー「all_basic_data」で基礎データを読み込み配列arrayに格納
           key_visit="visit_data%" + area_no
           //ローカルストレージからキー「vsit_data」で基礎データを読み込み配列visit_ynに格納
@@ -299,6 +298,8 @@
             //現在地と対象地点の距離を表示（距離が一定値より小さくなるとチェックインできる）
             var dist=document.getElementById("markerDistance");
             dist.style.marginTop= "20px" ; //トップマージンを指定
+        　alert(markerList[0].name);
+          
             if(Math.round(r)>checkin_distance)  //チェックインの範囲を指定
               { 
                 //対象地点のチェックイン可能範囲の外側にいる場合の処理
