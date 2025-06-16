@@ -298,8 +298,6 @@
             //現在地と対象地点の距離を表示（距離が一定値より小さくなるとチェックインできる）
             var dist=document.getElementById("markerDistance");
             dist.style.marginTop= "20px" ; //トップマージンを指定
-        　alert(markerList[1].name);
-          
             if(Math.round(r)>checkin_distance)  //チェックインの範囲を指定
               { 
                 //対象地点のチェックイン可能範囲の外側にいる場合の処理
