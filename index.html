@@ -186,7 +186,9 @@
 		      if(Curlat>lat_max){lat_max=Curlat};
 		      if(Curlng<lng_min){lng_min=Curlng};
 		      if(Curlng>lng_max){lng_max=Curlng};
-		      const bounds = L.latLngBounds([lat_min,lng_min],[lat_max+0.001,lng_max+0.001]);
+                      lat_max=Number(lat_max)+0.0005;
+                      lng_max=Number(lng_max)+0.0005;
+		      const bounds = L.latLngBounds([lat_min,lng_min],[lat_max,lng_max]);
 		      // 地図をBoundsにフィットさせる
 		      mymap.fitBounds(bounds);
 		  }
