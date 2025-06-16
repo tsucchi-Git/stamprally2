@@ -361,8 +361,8 @@
               if(lat1>lat_max){lat_max=lat1};if(lat2>lat_max){lat_max=lat2};
               if(lng1<lng_min){lng_min=lng1};if(lng2<lng_min){lng_min=lng2};
               if(lng1>lng_max){lng_max=lng1};if(lng2>lng_max){lng_max=lng2};
-              lat_max=Number(lat_max)+0.0005;
-              lng_max=Number(lng_max)+0.0005;
+              lat_max=Number(lat_max)+0.002;
+              lng_max=Number(lng_max)+0.002;
               const bounds = L.latLngBounds([lat_min,lng_min],[lat_max,lng_max]);
               // 地図をBoundsにフィットさせる
               mymap.fitBounds(bounds);
