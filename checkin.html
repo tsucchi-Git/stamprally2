@@ -335,7 +335,7 @@
                         const str=markerList[ispot].file;
                         const split_str=str.split(".");
                         var file_name=split_str[0] + "_done." + split_str[1];
-                        e_img.src=file_name;
+                        e_img.src='image/' + file_name;
                         visit_yn[ispot]=1
                       }
                       //訪問済み→ローカルストレージに書き込み
