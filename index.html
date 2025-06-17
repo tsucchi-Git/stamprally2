@@ -83,9 +83,7 @@
 		//}
 		  //ローカルストレージに災害碑の基礎データを保存
 		  if(window.localStorage){
-
-		localStorage.removeItem('visit_data%3');
-			  
+		    //localStorage.removeItem('visit_data%3'); //訪問の有無を記憶させるローカルストレージをクリアする
 		    //エリア番号をJSONデータに変化し、ローカルストレージに書き込み　キーは「area_no%」
 		    let json_areano=JSON.stringify(markerList[0].areaid);
 		    localStorage.setItem('area_no%',json_areano);	  
