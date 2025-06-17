@@ -83,6 +83,9 @@
 		//}
 		  //ローカルストレージに災害碑の基礎データを保存
 		  if(window.localStorage){
+
+localstrabe.remove('key_visit%3');
+			  
 		    //エリア番号をJSONデータに変化し、ローカルストレージに書き込み　キーは「area_no%」
 		    let json_areano=JSON.stringify(markerList[0].areaid);
 		    localStorage.setItem('area_no%',json_areano);	  
